@@ -51,30 +51,22 @@ module.exports = {
 
       const comparePassword = bcrypt.compareSync(password, findUser.password);
       if (comparePassword) {
-        signToken(
-          {
-            id: findUser._id,
-            role: findUser.role,
-            username: findUser.username,
-          },
-          (err, token) => {
-            if (err) throw err;
-            res.cookie("token", token).json({
-              id: findUser._id,
-              role: findUser.role,
-              username: findUser.username,
-            });
-          }
-        );
+        const token = signToken({
+          id: findUser._id,
+          role: findUser.role,
+          email: findUser.email,
+          username: findUser.username,
+        });
+
+        res.cookie("token", token).json({
+          id: findUser._id,
+          role: findUser.role,
+          username: findUser.username,
+          email: findUser.email,
+        });
       } else {
         return res.status(400).json("wrong password");
       }
-
-      res.status(200).json({
-        status: "success",
-        message: "Successfully login",
-        data: token,
-      });
     } catch (error) {
       return res.status(500).json({ error: "Error retrieving with server." });
     }
@@ -86,20 +78,11 @@ module.exports = {
 
   getUser: async (req, res) => {
     try {
-      const { token } = req.cookies;
+      const { email } = req.loggedUser;
 
-      console.log(token.length);
+      const foundUser = await User.find({ email: email });
 
-      if (token.length > 0) {
-        verifyToken(token, (err, info) => {
-          if (err) throw err;
-          res.json(info);
-        });
-      } else {
-        return res.status(401).json("you must login");
-      }
-
-      res.json(req.cookies);
+      res.json(foundUser);
     } catch (error) {
       return res.status(500).json({ error: "Error retrieving with server." });
     }
