@@ -59,10 +59,9 @@ module.exports = {
         });
 
         res.cookie("token", token).json({
-          id: findUser._id,
-          role: findUser.role,
-          username: findUser.username,
-          email: findUser.email,
+          status: "success",
+          message: "Successfully Login",
+          data: findUser,
         });
       } else {
         return res.status(400).json("wrong password");
@@ -73,7 +72,10 @@ module.exports = {
   },
 
   logout: async (req, res) => {
-    res.cookie("token", "").json("ok");
+    res.cookie("token", "").status(200).json({
+      status: "success",
+      messagse: "Successfully Logout",
+    });
   },
 
   getUser: async (req, res) => {
@@ -82,7 +84,11 @@ module.exports = {
 
       const foundUser = await User.find({ email: email });
 
-      res.json(foundUser);
+      res.status(200).json({
+        status: "success",
+        messagse: "Successfully get user",
+        data: foundUser,
+      });
     } catch (error) {
       return res.status(500).json({ error: "Error retrieving with server." });
     }
