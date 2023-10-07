@@ -24,7 +24,7 @@ const postSchema = new mongoose.Schema(
     },
     cover: {
       type: String,
-      required: [true, "Required"],
+      required: [false, "Required"],
     },
   },
   { timestamps: true, unique: true }

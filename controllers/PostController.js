@@ -48,25 +48,24 @@ module.exports = {
     }
   },
 
-  getByIDPost: async(req, res) => {
-
+  getByIDPost: async (req, res) => {
     try {
-      const { id } = req.params
+      const { id } = req.params;
 
       const post = await Post.findById(id).select(
-        "_id author title summary content cover createdAt")
-      
+        "_id author title summary content cover createdAt"
+      );
+
+      if (!post) {
+        return res.status(404).json({ error: "Post not found." });
+      }
+
       res.status(200).json({
         status: "success",
         message: "Successfully get data",
         data: post,
       });
-
-
-    } catch (error) {
-      
-    }
-
+    } catch (error) {}
   },
 
   searchPost: async (req, res) => {
