@@ -7,14 +7,19 @@ module.exports = {
     try {
       const { username, email, password } = req.body;
 
+       if (!username || !email || !password) {
+         return res.status(400).json("All field required");
+       }
+
       const findUser = await User.findOne({ email: email });
+      const findUserByUsername = await User.findOne({ username: username });
 
       if (findUser) {
-        return res.status(400).json("User already exist");
+        return res.status(400).json("Email already exist");
       }
 
-      if (!username || !email || !password) {
-        return res.status(400).json("All field required");
+      if (findUserByUsername) {
+        return res.status(400).json("Username already exist");
       }
 
       let hashPassword = bcrypt.hashSync(password, 8);
