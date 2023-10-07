@@ -57,7 +57,7 @@ module.exports = {
       );
 
       if (!post) {
-        return res.status(404).json({ error: "Post not found." });
+        return res.status(404).json("Post not found");
       }
 
       res.status(200).json({
@@ -65,7 +65,9 @@ module.exports = {
         message: "Successfully get data",
         data: post,
       });
-    } catch (error) {}
+    } catch (error) {
+      return res.status(500).json({ error: "Error retrieving with server." });
+    }
   },
 
   searchPost: async (req, res) => {
