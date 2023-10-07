@@ -7,6 +7,7 @@ const { authentication } = require("../middlewares/auth");
 
 router.get("/", PostController.searchPost);
 router.get("/all", PostController.getAllPost);
+router.get("/:id", PostController.getByIDPost);
 
 router.use(authentication);
 router.post("/", uploadMiddleware.single("file"), PostController.createPost);

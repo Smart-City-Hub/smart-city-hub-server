@@ -34,19 +34,41 @@ module.exports = {
 
   getAllPost: async (req, res) => {
     try {
-      const post = await Post.find().select(
-        "_id author title summary content cover createdAt"
+      const posts = await Post.find().select(
+        "_id author title summary cover createdAt"
       );
 
       res.status(200).json({
         status: "success",
         message: "Successfully get data",
-        data: post,
+        data: posts,
       });
     } catch (error) {
       return res.status(500).json({ error: "Error retrieving with server." });
     }
   },
+
+  getByIDPost: async(req, res) => {
+
+    try {
+      const { id } = req.params
+
+      const post = await Post.findById(id).select(
+        "_id author title summary content cover createdAt")
+      
+      res.status(200).json({
+        status: "success",
+        message: "Successfully get data",
+        data: post,
+      });
+
+
+    } catch (error) {
+      
+    }
+
+  },
+
   searchPost: async (req, res) => {
     try {
       const data = await Post.find({
