@@ -1,12 +1,41 @@
 const Post = require("../models/Post");
+const fs = require("fs");
 
 module.exports = {
+  createPost: async (req, res) => {
+    try {
+      const { originalname, path } = req.file;
+      const parts = originalname.split(".");
+      const ext = parts[1];
+      const newPath = path + "." + ext;
+      fs.renameSync(path, newPath);
+
+      const { username } = req.loggedUser;
+
+      const { title, summary, content } = req.body;
+
+      const newPost = await Post.create({
+        title,
+        summary,
+        content,
+        author: username,
+        cover: newPath,
+      });
+
+      res.status(201).json({
+        status: "success",
+        message: "Successfully create data",
+        data: newPost,
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Error retrieving with server" });
+    }
+  },
+
   searchPost: async (req, res) => {
     try {
       const data = await Post.find({
-        $or: [
-          { title: { $regex: req.query.key, $options: "i" } },
-        ],
+        $or: [{ title: { $regex: req.query.key, $options: "i" } }],
       });
 
       res.status(200).json({
@@ -18,5 +47,4 @@ module.exports = {
       return res.status(500).json({ error: "Error retrieving with server." });
     }
   },
-
-}
+};
