@@ -53,7 +53,7 @@ module.exports = {
       const { id } = req.params;
 
       const post = await Post.findById(id).select(
-        "_id author title summary content cover createdAt"
+        "_id author title summary content cover createdAt likes"
       );
 
       if (!post) {
@@ -85,4 +85,40 @@ module.exports = {
       return res.status(500).json({ error: "Error retrieving with server." });
     }
   },
+
+  Like: async (req, res) =>{
+    const { postId } = req.params;
+    const { userId } = req.body;
+
+    try {
+      const post = await Post.findByIdAndUpdate(
+        postId,
+        { $push:  {likes: userId}},
+        { new: true}
+      );
+      res.json(post);
+
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error : 'Something went wrong.'}); 
+    }
+  },
+
+  Unlike: async (req, res) =>{
+    const { postId } = req.params;
+    const { userId } = req.body;
+
+    try {
+      const post = await Post.findByIdAndUpdate(
+        postId,
+        { $pull:  {likes: userId}},
+        { new: true}
+      );
+      res.json(post);
+      
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error : 'Something went wrong.'}); 
+    }
+  }
 };

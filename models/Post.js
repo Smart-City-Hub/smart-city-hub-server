@@ -26,6 +26,10 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: [false, "Required"],
     },
+    likes: [{
+      type: ObjectId,
+      ref: "User"
+    },],
   },
   { timestamps: true, unique: true }
 );
