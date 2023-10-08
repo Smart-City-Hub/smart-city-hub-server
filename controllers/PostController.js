@@ -1,5 +1,6 @@
 const Post = require("../models/Post");
 const fs = require("fs");
+const FuzzySearch = require("fuzzy-search");
 
 module.exports = {
   createPost: async (req, res) => {
@@ -157,18 +158,23 @@ module.exports = {
 
   searchPost: async (req, res) => {
     try {
-      const data = await Post.find({
-        $or: [{ title: { $regex: req.query.key, $options: "i" } }],
-      }).select("_id author title summary content cover createdAt");
+      const data = await Post.find({}).select(
+        "_id author title summary content cover createdAt"
+      );
+
+      const searcher = new FuzzySearch(data, ["title"], {
+        caseSensitive: false,
+      });
+
+      const result = searcher.search(req.query.key)
 
       res.status(200).json({
         status: "success",
         messagse: "Successfully get post",
-        data: data,
+        data: result,
       });
     } catch (error) {
       return res.status(500).json({ error: "Error retrieving with server." });
-  
     }
   },
 };
