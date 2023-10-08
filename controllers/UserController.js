@@ -79,7 +79,7 @@ module.exports = {
   logout: async (req, res) => {
     res.cookie("token", "").status(200).json({
       status: "success",
-      messagse: "Successfully Logout",
+      message: "Successfully Logout",
     });
   },
 
