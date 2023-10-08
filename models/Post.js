@@ -30,6 +30,12 @@ const postSchema = new mongoose.Schema(
       type: ObjectId,
       ref: "User"
     },],
+    Comments: [{
+      id: {type: mongoose.Schema.Types.ObjectId,
+      default: mongoose.Types.ObjectId},
+      text: String,
+      author: { type: ObjectId, ref: "User"}
+    }]
   },
   { timestamps: true, unique: true }
 );

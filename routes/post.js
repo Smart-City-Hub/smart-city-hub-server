@@ -10,8 +10,13 @@ router.get("/all", PostController.getAllPost);
 router.get("/:id", PostController.getByIDPost);
 
 //like and unlike
-router.post("/like", Like);
-router.post("/unlike", Unlike);
+router.post("/:id/like", PostController.like);
+router.post("/:id/unlike", PostController.unlike);
+
+//comments
+router.post("/:id/comments", PostController.comment);
+router.get("/:id/comments", PostController.getComment )
+router.delete("/:id/comments/:commentId", PostController.deleteComment)
 
 router.use(authentication);
 router.post("/", uploadMiddleware.single("file"), PostController.createPost);

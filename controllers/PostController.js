@@ -1,5 +1,6 @@
 const Post = require("../models/Post");
 const fs = require("fs");
+const { post } = require("../routes");
 
 module.exports = {
   createPost: async (req, res) => {
@@ -86,7 +87,7 @@ module.exports = {
     }
   },
 
-  Like: async (req, res) =>{
+  like: async (req, res) =>{
     const { postId } = req.params;
     const { userId } = req.body;
 
@@ -104,7 +105,7 @@ module.exports = {
     }
   },
 
-  Unlike: async (req, res) =>{
+  unlike: async (req, res) =>{
     const { postId } = req.params;
     const { userId } = req.body;
 
@@ -120,5 +121,62 @@ module.exports = {
       console.error(err);
       res.status(500).json({ error : 'Something went wrong.'}); 
     }
-  }
+  },
+
+  comment: async (req, res) => {
+    const { postId } = req.params;
+    const { userId, text } = req.body;
+  
+    try {
+      const post = await Post.findByIdAndUpdate(
+        postId,
+        { $push: { comments: { text, author: userId } } },
+        { new: true }
+      );
+  
+      res.json(post);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Error adding the comment.' });
+    }
+  },
+
+  getComment: async (req, res) => {
+    const { postId } = req.params;
+  
+    try {
+      const post = await Post.findById(postId).populate('comments.author', 'username'); 
+  
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found.' });
+      }
+  
+      res.json(post.comments);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Error fetching comments.' });
+    }
+  },
+
+  deleteComment: async (req, res) => {
+    const { postId, commentId } = req.params;
+  
+    try {
+      const post = await Post.findByIdAndUpdate(
+        postId,
+        { $pull: { comments: { _id: commentId } } }, 
+        { new: true }
+      );
+  
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found.' });
+      }
+  
+      res.json(post);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Error deleting the comment.' });
+    }
+  },
+ 
 };
