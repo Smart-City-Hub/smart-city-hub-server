@@ -76,16 +76,34 @@ module.exports = {
     }
   },
 
-  getAllPost: async (req, res) => {
+  getByUser: async (req, res) => {
     try {
-      const posts = await Post.find().select(
-        "_id author title summary cover createdAt"
+      const { username } = req.loggedUser;
+
+      const foundPost = await Post.find({ author: username }).select(
+        "_id author title summary content cover createdAt"
       );
 
       res.status(200).json({
         status: "success",
-        message: "Successfully get data",
-        data: posts,
+        messagse: "Successfully get user",
+        data: foundPost,
+      });
+    } catch (error) {
+      return res.status(500).json({ error: "Error retrieving with server." });
+    }
+  },
+
+  getAllPost: async (req, res) => {
+    try {
+      const foundPost = await Post.find().select(
+        "_id author title summary content cover createdAt"
+      );
+
+      res.status(200).json({
+        status: "success",
+        messagse: "Successfully get user",
+        data: foundPost,
       });
     } catch (error) {
       return res.status(500).json({ error: "Error retrieving with server." });
@@ -116,27 +134,24 @@ module.exports = {
 
   deleteProduct: async (req, res) => {
     try {
+      const { id } = req.params;
+      const { username } = req.loggedUser;
 
-      const {id} = req.params
-      const {username} = req.loggedUser
+      const findById = await Post.findById(id);
 
-      const findById = await Post.findById(id)
-
-      if(findById.author != username) {
-        return res.status(401).json("you are not the author");        
+      if (findById.author != username) {
+        return res.status(401).json("you are not the author");
       }
 
       const deletedPost = await Post.findByIdAndDelete(id);
-      
-       res.status(200).json({
-         status: "success",
-         message: "Successfully delete data",
-         data: deletedPost,
-       });
 
+      res.status(200).json({
+        status: "success",
+        message: "Successfully delete data",
+        data: deletedPost,
+      });
     } catch (error) {
       return res.status(500).json({ error: "Error retrieving with server." });
-      
     }
   },
 
@@ -144,7 +159,7 @@ module.exports = {
     try {
       const data = await Post.find({
         $or: [{ title: { $regex: req.query.key, $options: "i" } }],
-      });
+      }).select("_id author title summary content cover createdAt");
 
       res.status(200).json({
         status: "success",
@@ -153,6 +168,7 @@ module.exports = {
       });
     } catch (error) {
       return res.status(500).json({ error: "Error retrieving with server." });
+  
     }
   },
 };

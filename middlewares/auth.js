@@ -17,7 +17,7 @@ module.exports = {
       const foundUser = await User.findOne({ email: email });
 
       if (!foundUser) {
-        res.status(404).json({ message: "User not found." });
+       return res.status(404).json({ message: "User not found." });
       } else {
         req.loggedUser = {
           _id: foundUser._id,
@@ -30,6 +30,7 @@ module.exports = {
       next();
     } catch (error) {
       return res.status(500).json({ error: "Error retrieving server." });
+      
     }
   },
 };
