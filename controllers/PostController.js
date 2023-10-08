@@ -32,6 +32,50 @@ module.exports = {
     }
   },
 
+  updatePost: async (req, res) => {
+    try {
+      let newPath = null;
+      if (req.file) {
+        const { originalname, path } = req.file;
+        const parts = originalname.split(".");
+        const ext = parts[1];
+        newPath = path + "." + ext;
+        fs.renameSync(path, newPath);
+      }
+
+      const { id, title, summary, content } = req.body;
+      const { username } = req.loggedUser;
+
+      const findPost = await Post.findById(id);
+
+      if (findPost.author != username) {
+        return res.status(401).json("you are not the author");
+      }
+
+      const updatedPost = await Post.findByIdAndUpdate(
+        id,
+        {
+          title,
+          summary,
+          content,
+          cover: newPath ? newPath : findPost.cover,
+          author: username,
+        },
+        {
+          new: true,
+        }
+      );
+
+      res.status(200).json({
+        status: "success",
+        message: "Successfully update data",
+        data: updatedPost,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
   getAllPost: async (req, res) => {
     try {
       const posts = await Post.find().select(

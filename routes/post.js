@@ -11,5 +11,6 @@ router.get("/:id", PostController.getByIDPost);
 
 router.use(authentication);
 router.post("/", uploadMiddleware.single("file"), PostController.createPost);
+router.put("/", uploadMiddleware.single("file"), PostController.updatePost);
 
 module.exports = router;
