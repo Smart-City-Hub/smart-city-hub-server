@@ -72,7 +72,7 @@ module.exports = {
         data: updatedPost,
       });
     } catch (error) {
-      console.log(error);
+      return res.status(500).json({ error: "Error retrieving with server." });
     }
   },
 
@@ -111,6 +111,32 @@ module.exports = {
       });
     } catch (error) {
       return res.status(500).json({ error: "Error retrieving with server." });
+    }
+  },
+
+  deleteProduct: async (req, res) => {
+    try {
+
+      const {id} = req.params
+      const {username} = req.loggedUser
+
+      const findById = await Post.findById(id)
+
+      if(findById.author != username) {
+        return res.status(401).json("you are not the author");        
+      }
+
+      const deletedPost = await Post.findByIdAndDelete(id);
+      
+       res.status(200).json({
+         status: "success",
+         message: "Successfully delete data",
+         data: deletedPost,
+       });
+
+    } catch (error) {
+      return res.status(500).json({ error: "Error retrieving with server." });
+      
     }
   },
 
