@@ -7,9 +7,9 @@ module.exports = {
     try {
       const { username, email, password } = req.body;
 
-       if (!username || !email || !password) {
-         return res.status(400).json("All field required");
-       }
+      if (!username || !email || !password) {
+        return res.status(400).json("All field required");
+      }
 
       const findUser = await User.findOne({ email: email });
       const findUserByUsername = await User.findOne({ username: username });
@@ -63,7 +63,7 @@ module.exports = {
           username: findUser.username,
         });
 
-        res.cookie("token", token).json({
+        res.status(200).cookie("token", token).json({
           status: "success",
           message: "Successfully Login",
           data: findUser,
