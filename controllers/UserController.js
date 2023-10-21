@@ -1,10 +1,17 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const { signToken, verifyToken } = require("../helpers/jwt");
+const fs = require("fs");
 
 module.exports = {
   register: async (req, res) => {
     try {
+      const { originalname, path } = req.file;
+      const parts = originalname.split(".");
+      const ext = parts[1];
+      const newPath = path + "." + ext;
+      fs.renameSync(path, newPath);
+
       const { username, email, password } = req.body;
 
       if (!username || !email || !password) {
@@ -15,10 +22,12 @@ module.exports = {
       const findUserByUsername = await User.findOne({ username: username });
 
       if (findUser) {
+        fs.unlinkSync(newPath);
         return res.status(400).json("Email already exist");
       }
 
       if (findUserByUsername) {
+        fs.unlinkSync(newPath);
         return res.status(400).json("Username already exist");
       }
 
@@ -28,6 +37,7 @@ module.exports = {
         username,
         email,
         password: hashPassword,
+        photo: newPath
       });
 
       res.status(200).json({
