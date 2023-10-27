@@ -37,7 +37,7 @@ module.exports = {
         username,
         email,
         password: hashPassword,
-        photo: newPath
+        photo: newPath,
       });
 
       res.status(200).json({
@@ -78,6 +78,7 @@ module.exports = {
           message: "Successfully Login",
           data: findUser,
         });
+
       } else {
         return res.status(400).json("wrong password");
       }
