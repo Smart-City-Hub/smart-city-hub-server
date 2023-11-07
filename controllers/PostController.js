@@ -177,4 +177,128 @@ module.exports = {
       return res.status(500).json({ error: "Error retrieving with server." });
     }
   },
+
+  toggleLike: async (req, res) => {
+    const postId = req.params;
+    const userId = req.user._id; 
+  
+    try {
+      const post = await Post.findById(postId);
+  
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+  
+      const likedIndex = post.likes.indexOf(userId);
+  
+      if (likedIndex === -1) {
+        post.likes.push(userId);
+        await post.save();
+        res.json({ message: 'Post liked successfully' });
+      } else {
+        post.likes.splice(likedIndex, 1);
+        await post.save();
+        res.json({ message: 'Post unliked successfully' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while toggling the like' });
+    }
+  },
+
+  getLikeCount: async (req, res) => {
+    const postId = req.params;
+  
+    try {
+      const post = await Post.findById(postId);
+  
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+  
+      const likeCount = post.likes.length;
+  
+      res.json({ likeCount });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while retrieving the like count' });
+    }
+  },
+
+  addComment: async (req, res) => {
+    const postId = req.params;
+    const userId = req.user._id; 
+    const { text } = req.body;
+  
+    try {
+      const post = await Post.findById(postId);
+  
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+  
+      const commentId = mongoose.Types.ObjectId().toString(); 
+      const comment = new Comment({ commentId, text, author: userId });
+  
+      post.comments.push(comment);
+      await Promise.all([comment.save(), post.save()]);
+  
+      res.json({ message: 'Comment added successfully', commentId });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while adding a comment' });
+    }
+  },
+
+  deleteComment: async (req, res) => {
+    const postId = req.params;
+    const commentId = req.params.commentId;
+    const userId = req.user._id;
+  
+    try {
+      const post = await Post.findById(postId);
+  
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+  
+      const comment = post.comments.id(commentId);
+  
+      if (!comment) {
+        return res.status(404).json({ error: 'Comment not found' });
+      }
+  
+      if (comment.author.toString() !== userId.toString()) {
+        return res.status(403).json({ error: 'Unauthorized to delete this comment' });
+      }
+  
+      comment.remove();
+      await post.save();
+  
+      res.json({ message: 'Comment deleted successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while deleting the comment' });
+    }
+  },
+  
+
+  getComments: async (req, res) => {
+    const postId = req.params;
+  
+    try {
+      const post = await Post.findById(postId);
+  
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+  
+      const comments = post.comments;
+  
+      res.json(comments);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while retrieving comments' });
+    }
+  }
 };
