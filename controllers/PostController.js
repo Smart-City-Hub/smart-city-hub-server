@@ -180,7 +180,7 @@ module.exports = {
 
   toggleLike: async (req, res) => {
     const postId = req.params;
-    const userId = req.user._id; 
+    const { username } = req.loggedUser; 
   
     try {
       const post = await Post.findById(postId);
@@ -189,7 +189,7 @@ module.exports = {
         return res.status(404).json({ error: 'Post not found' });
       }
   
-      const likedIndex = post.likes.indexOf(userId);
+      const likedIndex = post.likes.indexOf(username);
   
       if (likedIndex === -1) {
         post.likes.push(userId);
@@ -227,7 +227,7 @@ module.exports = {
 
   addComment: async (req, res) => {
     const postId = req.params;
-    const userId = req.user._id; 
+    const { username } = req.loggedUser; 
     const { text } = req.body;
   
     try {
@@ -238,7 +238,7 @@ module.exports = {
       }
   
       const commentId = mongoose.Types.ObjectId().toString(); 
-      const comment = new Comment({ commentId, text, author: userId });
+      const comment = new Comment({ commentId, text, author: username });
   
       post.comments.push(comment);
       await Promise.all([comment.save(), post.save()]);
@@ -253,7 +253,7 @@ module.exports = {
   deleteComment: async (req, res) => {
     const postId = req.params;
     const commentId = req.params.commentId;
-    const userId = req.user._id;
+    const { username } = req.loggedUser;
   
     try {
       const post = await Post.findById(postId);
@@ -268,7 +268,7 @@ module.exports = {
         return res.status(404).json({ error: 'Comment not found' });
       }
   
-      if (comment.author.toString() !== userId.toString()) {
+      if (comment.author.toString() !== username.toString()) {
         return res.status(403).json({ error: 'Unauthorized to delete this comment' });
       }
   
