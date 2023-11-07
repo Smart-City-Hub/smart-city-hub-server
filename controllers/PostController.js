@@ -192,7 +192,7 @@ module.exports = {
       const likedIndex = post.likes.indexOf(username);
   
       if (likedIndex === -1) {
-        post.likes.push(userId);
+        post.likes.push(username);
         await post.save();
         res.json({ message: 'Post liked successfully' });
       } else {
