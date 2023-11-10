@@ -179,7 +179,7 @@ module.exports = {
   },
 
   toggleLike: async (req, res) => {
-    const postId = req.params;
+    const postId = req.params.id;
     const { username } = req.loggedUser; 
   
     try {
@@ -207,7 +207,7 @@ module.exports = {
   },
 
   getLikeCount: async (req, res) => {
-    const postId = req.params;
+    const postId = req.params.id;
   
     try {
       const post = await Post.findById(postId);
@@ -226,7 +226,7 @@ module.exports = {
   },
 
   addComment: async (req, res) => {
-    const postId = req.params;
+    const postId = req.params.id;
     const { username } = req.loggedUser; 
     const { text } = req.body;
   
@@ -251,7 +251,7 @@ module.exports = {
   },
 
   deleteComment: async (req, res) => {
-    const postId = req.params;
+    const postId = req.params.id;
     const commentId = req.params.commentId;
     const { username } = req.loggedUser;
   
@@ -284,8 +284,7 @@ module.exports = {
   
 
   getComments: async (req, res) => {
-    const postId = req.params;
-  
+    const postId = req.params.id;
     try {
       const post = await Post.findById(postId);
   
