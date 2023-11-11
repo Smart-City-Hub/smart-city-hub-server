@@ -21,6 +21,8 @@ module.exports = {
         content,
         author: username,
         cover: newPath,
+        likes,
+        comments
       });
 
       res.status(201).json({
@@ -98,7 +100,7 @@ module.exports = {
   getAllPost: async (req, res) => {
     try {
       const foundPost = await Post.find().select(
-        "_id author title summary content cover createdAt"
+        "_id author title summary content cover createdAt likes comments "
       );
 
       res.status(200).json({
@@ -116,7 +118,7 @@ module.exports = {
       const { id } = req.params;
 
       const post = await Post.findById(id).select(
-        "_id author title summary content cover createdAt"
+        "_id author title summary content cover createdAt likes comments"
       );
 
       if (!post) {
@@ -159,7 +161,7 @@ module.exports = {
   searchPost: async (req, res) => {
     try {
       const data = await Post.find({}).select(
-        "_id author title summary content cover createdAt"
+        "_id author title summary content cover createdAt likes comments"
       );
 
       const searcher = new FuzzySearch(data, ["title"], {
