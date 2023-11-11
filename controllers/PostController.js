@@ -21,8 +21,8 @@ module.exports = {
         content,
         author: username,
         cover: newPath,
-        likes,
-        comments
+        // likes,
+        // comments
       });
 
       res.status(201).json({
