@@ -1,6 +1,8 @@
 const Post = require("../models/Post");
 const fs = require("fs");
 const FuzzySearch = require("fuzzy-search");
+const mongoose = require("mongoose");
+const Comment = require("../models/Comment")
 
 module.exports = {
   createPost: async (req, res) => {
@@ -238,12 +240,15 @@ module.exports = {
       if (!post) {
         return res.status(404).json({ error: 'Post not found' });
       }
-  
-      const commentId = mongoose.Types.ObjectId().toString(); 
+      
+      const commentId = new mongoose.Types.ObjectId().toString();
       const comment = new Comment({ commentId, text, author: username });
   
       post.comments.push(comment);
       await Promise.all([comment.save(), post.save()]);
+
+      // await comment.save();
+      // await Blog.findOneAndUpdate({_id:req.body._id}, {$push: {comment});
   
       res.json({ message: 'Comment added successfully', commentId });
     } catch (error) {
@@ -266,15 +271,23 @@ module.exports = {
   
       const comment = post.comments.id(commentId);
   
-      if (!comment) {
+      // if (!comment) {
+      //   return res.status(404).json({ error: 'Comment not found' });
+      // }
+
+      const commentIndex = post.comments.findIndex(comment => comment._id.equals(commentId));
+
+      if (commentIndex === -1) {
         return res.status(404).json({ error: 'Comment not found' });
       }
-  
+        
       if (comment.author.toString() !== username.toString()) {
         return res.status(403).json({ error: 'Unauthorized to delete this comment' });
       }
-  
-      comment.remove();
+      
+      // comment.remove();
+      post.comments.splice(commentIndex, 1);
+      await Comment.findByIdAndDelete(commentId);
       await post.save();
   
       res.json({ message: 'Comment deleted successfully' });
