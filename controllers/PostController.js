@@ -86,7 +86,7 @@ module.exports = {
       const { username } = req.loggedUser;
 
       const foundPost = await Post.find({ author: username }).select(
-        "_id author title summary content cover createdAt"
+        "_id author title summary content cover createdAt likes comments"
       );
 
       res.status(200).json({
