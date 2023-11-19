@@ -73,7 +73,7 @@ module.exports = {
           username: findUser.username,
         });
 
-        res.status(200).cookie("token", token).json({
+        res.status(200).cookie("token", token, {httpOnly: true, sameSite: 'none', secure: true , maxAge: 24 * 60 * 60 * 1000}).json({
           status: "success",
           message: "Successfully Login",
           data: findUser,
