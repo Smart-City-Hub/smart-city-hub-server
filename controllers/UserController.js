@@ -72,18 +72,19 @@ module.exports = {
           email: findUser.email,
           username: findUser.username,
         });
-
-        res.status(200).cookie("token", token, {httpOnly: true, sameSite: 'none', secure: true , maxAge: 24 * 60 * 60 * 1000}).json({
+        res.header('Access-Control-Allow-Credentials', true)
+        res.status(200).cookie("token", token).json({
           status: "success",
           message: "Successfully Login",
           data: findUser,
+          token: token
         });
 
       } else {
         return res.status(400).json("wrong password");
       }
     } catch (error) {
-      return res.status(500).json({ error: "Error retrieving with server." });
+      return res.status(500).json({ error: `Error retrieving with server. ${error}` });
     }
   },
 
