@@ -14,6 +14,7 @@ module.exports = {
       fs.renameSync(path, newPath);
 
       const { username } = req.loggedUser;
+      console.log(req.loggedUser, 'logged')
 
       const { title, summary, content } = req.body;
 
@@ -33,6 +34,7 @@ module.exports = {
         data: newPost,
       });
     } catch (error) {
+      console.log(error)
       res.status(500).json({ error: "Error retrieving with server" });
     }
   },

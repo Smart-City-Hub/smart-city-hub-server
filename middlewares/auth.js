@@ -13,7 +13,9 @@ module.exports = {
           .json({ message: "Unauthenticated please login." });
       }
 
-      const data = verifyToken(token);
+      
+
+      const data = verifyToken(token || authorization);
 
       const { email } = data;
 

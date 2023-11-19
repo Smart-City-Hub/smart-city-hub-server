@@ -14,7 +14,7 @@ const postRouter = require("./routes/post");
 const app = express();
 
 app.use(logger("dev"));
-app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+app.use(cors({ credentials: true, origin: "https://comforting-strudel-ba9e8c.netlify.app" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));

@@ -72,7 +72,6 @@ module.exports = {
           email: findUser.email,
           username: findUser.username,
         });
-
         res.status(200).json({
           status: "success",
           message: "Successfully Login",
@@ -83,7 +82,7 @@ module.exports = {
         return res.status(400).json("wrong password");
       }
     } catch (error) {
-      return res.status(500).json({ error: "Error retrieving with server." });
+      return res.status(500).json({ error: `Error retrieving with server. ${error}` });
     }
   },
 
