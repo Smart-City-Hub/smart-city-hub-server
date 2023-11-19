@@ -5,12 +5,13 @@ module.exports = {
   authentication: async (req, res, next) => {
     try {
       const { token } = req.cookies;
-
-      if (!token) {
+      const { authorization } = req.headers;
+      console.log(req.headers, 'token')
+      if (!token || !authorization) {
         return res.status(401).json({ message: "Unauthenticated please login." });
       }
 
-      const data = verifyToken(token);
+      const data = verifyToken(token || authorization);
 
       const { email } = data;
 

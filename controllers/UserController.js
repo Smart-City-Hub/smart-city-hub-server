@@ -73,7 +73,7 @@ module.exports = {
           username: findUser.username,
         });
         res.header('Access-Control-Allow-Credentials', true)
-        res.status(200).cookie("token", token).json({
+        res.status(200).json({
           status: "success",
           message: "Successfully Login",
           data: findUser,
