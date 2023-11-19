@@ -7,8 +7,7 @@ module.exports = {
       const { token } = req.cookies;
       const { authorization } = req.headers;
       
-      console.log(authorization, "log authorization");
-      console.log(req.headers, 'token')
+      console.log(authorization);
       if (!token || !authorization) {
         return res.status(401).json({ message: "Unauthenticated please login." });
       }
