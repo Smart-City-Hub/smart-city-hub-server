@@ -73,12 +73,12 @@ module.exports = {
           username: findUser.username,
         });
 
-        res.status(200).cookie("token", token).json({
+        res.status(200).json({
           status: "success",
           message: "Successfully Login",
           data: findUser,
+          access_token: token,
         });
-
       } else {
         return res.status(400).json("wrong password");
       }
@@ -99,6 +99,9 @@ module.exports = {
       const { email } = req.loggedUser;
 
       const foundUser = await User.find({ email: email });
+      if (!foundUser) {
+        return res.status(404).json("User not found");
+      }
 
       res.status(200).json({
         status: "success",
