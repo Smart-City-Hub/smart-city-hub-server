@@ -69,6 +69,7 @@ connection success : success connect database
 ### API Endpoints
 
 Post related Endpoint:
+
 POST `{{base_url}}/api/post` : Create new post with tittle, content, and cover.
 
 PUT `{{base_url}}/api/post` : Edit existing post
@@ -94,6 +95,7 @@ GET `{{base_url}}/api/post/:id/comments` : Get existing comment
 DEL `{{base_url}}/api/post/:id/comments` : Delete existing comment
 
 User related Endpoint:
+
 POST `{{base_url}}/api/users/register` : Register account
 
 POST `{{base_url}}/api/users/login` : Login to existing user
