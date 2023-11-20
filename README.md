@@ -100,7 +100,7 @@ POST `{{base_url}}/api/users/login` : Login to existing user
 
 POST `{{base_url}}/api/users/logout` : Logout
 
-for completed documentation of endpoint:
+for complete documentation of endpoint:
 https://documenter.getpostman.com/view/30013747/2s9Ye8gFHy
 
 ## Contributing
