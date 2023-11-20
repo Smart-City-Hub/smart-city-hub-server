@@ -70,21 +70,34 @@ connection success : success connect database
 
 Post related Endpoint:
 POST `{{base_url}}/api/post` : Create new post with tittle, content, and cover.
+
 PUT `{{base_url}}/api/post` : Edit existing post
+
 DEL `{{base_url}}/api/post/:id` : Delete existing post
+
 GET `{{base_url}}/api/post/all` : Get all post
+
 GET `{{base_url}}/api/post` : Get post by user
+
 GET `{{base_url}}/api/post/search?key=motor` : Search post by username
+
 GET `{{base_url}}/api/post/65155a52d1afed08ed45f9a0` : Get post by id post
+
 POST `{{base_url}}/api/post/:id/like` : Toogle between like and unlike
+
 GET `{{base_url}}/api/post/:id/like-count` : Get like count
+
 POST `{{base_url}}/api/post/:id/comments` : Create new comment
+
 GET `{{base_url}}/api/post/:id/comments` : Get existing comment
+
 DEL `{{base_url}}/api/post/:id/comments` : Delete existing comment
 
 User related Endpoint:
 POST `{{base_url}}/api/users/register` : Register account
+
 POST `{{base_url}}/api/users/login` : Login to existing user
+
 POST `{{base_url}}/api/users/logout` : Logout
 
 for completed documentation of endpoint:
